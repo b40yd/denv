@@ -1,0 +1,167 @@
+#!/bin/env bash
+#
+# Copyright (C) 2022, 7ym0n
+#
+# Author: 7ym0n <bb.qnyd@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+BASEPATH=$(cd `dirname $0`; pwd)
+LONG_SCRIPT_NAME=$(basename $0)
+SCRIPT_NAME=${LONG_SCRIPT_NAME%.sh}
+export DOTFAIRY_ROOT_DIR=${BASEPATH:-"."}
+export LOGLEVEL=4
+PASSED_SCRIPT=0
+FAILED_SCRIPT=0
+TOTAL_SCRIPT=0
+TOTAL_TREATED_SCRIPT=0
+INSTALL=0
+REMOVE=0
+UPGRADE=0
+
+usage() {
+    cat << EOF
+$LONG_SCRIPT_NAME <RUN_MODE> [OPTIONS], where RUN_MODE is one of:
+    --help -h
+        Show this help
+
+    --install install package.
+    --upgrade upgrade package.
+    --remove remove package.
+OPTIONS:
+    --only <script_number>
+        Modifies the RUN_MODE to only work on the script_number script.
+        Can be specified multiple times to work only on several scripts.
+        The script number is the numbered prefix of the script,
+        i.e. the script number of 1.2_script_name.sh is 1.2.
+    --sudo
+        This option lets you audit your system as a normal user, but allows sudo
+        escalation to gain read-only access to root files. Note that you need to
+        provide a sudoers file with NOPASSWD option in /etc/sudoers.d/ because
+        the '-n' option instructs sudo not to prompt for a password.
+        Finally note that '--sudo' mode only works for audit mode.
+EOF
+    exit 0
+}
+
+if [ $# = 0 ]; then
+    usage
+fi
+
+declare -a TEST_LIST ALLOWED_SERVICES_LIST
+
+# Arguments parsing
+while [[ $# > 0 ]]; do
+    ARG="$1"
+    case $ARG in
+        --install)
+            INSTALL=1
+            ;;
+        --UPGRADE)
+            UPGRADE=1
+            ;;
+        --remove)
+            REMOVE=1
+            ;;
+        --only)
+            TEST_LIST[${#TEST_LIST[@]}]="$2"
+            shift
+            ;;
+        --loglevel)
+            LOGLEVEL=$2
+            shift
+            ;;
+        --sudo)
+            SUDO_MODE='--sudo'
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            usage
+            ;;
+    esac
+    shift
+done
+
+[ -r $DOTFAIRY_ROOT_DIR/lib/common.sh     ] && . $DOTFAIRY_ROOT_DIR/lib/common.sh
+[ -r $DOTFAIRY_ROOT_DIR/lib/utils.sh      ] && . $DOTFAIRY_ROOT_DIR/lib/utils.sh
+
+is_installed bc
+if [ $FNRET = 1 ]; then
+    install_package bc
+fi
+
+for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*.sh); do
+    if [ ${#TEST_LIST[@]} -gt 0 ] ; then
+        # --only X has been specified at least once, is this script in my list ?
+        SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(basename $SCRIPT)")
+        SCRIPT_PREFIX_RE=$(sed -e 's/\./\\./g' <<< "$SCRIPT_PREFIX")
+        if ! grep -qEw "^$SCRIPT_PREFIX_RE" <<< "${TEST_LIST[@]}"; then
+            # not in the list
+            continue
+        fi
+    fi
+
+    info "Treating $SCRIPT"
+
+    if [ $INSTALL = 1 ]; then
+        debug "$DOTFAIRY_ROOT_DIR/src/$SCRIPT --install $SUDO_MODE"
+        $SCRIPT --install $SUDO_MODE
+    elif [ $UPGRADE = 1 ]; then
+        debug "$DOTFAIRY_ROOT_DIR/src/$SCRIPT --upgrade $SUDO_MODE"
+        $SCRIPT --upgrade $SUDO_MODE
+    elif [ $REMOVE = 1 ]; then
+        debug "$DOTFAIRY_ROOT_DIR/src/$SCRIPT --remove $SUDO_MODE"
+        $SCRIPT --remove $SUDO_MODE
+    fi
+
+    SCRIPT_EXITCODE=$?
+    debug "Script $SCRIPT finished with exit code $SCRIPT_EXITCODE"
+    case $SCRIPT_EXITCODE in
+        0)
+            debug "$SCRIPT passed"
+            PASSED_SCRIPT=$((PASSED_SCRIPT+1))
+            ;;
+        1)
+            debug "$SCRIPT failed"
+            FAILED_SCRIPT=$((FAILED_SCRIPT+1))
+            ;;
+    esac
+    if [ $SCRIPT_EXITCODE -eq 3 ]; then
+        {
+		    warn "$SCRIPT maybe is nonexist package in this system"
+            TOTAL_SCRIPT=$((TOTAL_SCRIPT+1))
+        }
+    else
+        {
+            TOTAL_SCRIPT=$((TOTAL_SCRIPT+1))
+        }
+    fi
+
+done
+
+printf "%40s\n" "################### SUMMARY ###################"
+printf "%30s %s\n"        "Total Available :" "$TOTAL_SCRIPT"
+printf "%30s %s\n"        "Total Runned :" "$TOTAL_SCRIPT"
+printf "%30s [ %7s ]\n"   "Total Passed :" "$PASSED_SCRIPT/$TOTAL_SCRIPT"
+printf "%30s [ %7s ]\n"   "Total Failed :" "$FAILED_SCRIPT/$TOTAL_SCRIPT"
+printf "%30s %.2f %%\n"   "Failed Percentage :" "$( echo "($FAILED_SCRIPT/$TOTAL_SCRIPT) * 100" | bc -l)"
+if [ $TOTAL_SCRIPT != 0 ]; then
+    printf "%30s %.2f %%\n"   "Conformity Percentage :" "$( echo "($PASSED_SCRIPT/($TOTAL_SCRIPT)) * 100" | bc -l)"
+else
+    printf "%30s %s %%\n"   "Conformity Percentage :" "N.A"
+fi
+
+exit 0
