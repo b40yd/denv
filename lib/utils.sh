@@ -163,29 +163,6 @@ is_installed()
     fi
 }
 
-install_package()
-{
-    local PACKAGE=$1
-    if command -v brew >/dev/null 2>&1; then
-        brew_install $PACKAGE
-
-    elif command -v yum >/dev/null 2>&1; then
-        yum_install $PACKAGE
-    elif command -v apt-get >/dev/null 2>&1; then
-        apt_install $PACKAGE
-    elif command -v pacman >/dev/null 2>&1; then
-        pacman_install $PACKAGE
-    else
-        echo "Not found software installer."
-        FNRET=1
-    fi
-    if [ $FNRET = 1 ]; then
-        FNRET=1
-    else
-        FNRET=0
-    fi
-}
-
 port_install()
 {
     local PACKAGE=$1
@@ -381,5 +358,229 @@ zypper_uninstall()
         FNRET=1
     else
         FNRET=0
+    fi
+}
+
+install_package()
+{
+    local PACKAGE=$1
+    is_installed $PACKAGE
+    if [ $FNRET = 1 ]; then
+        if command -v brew >/dev/null 2>&1; then
+            brew_install $PACKAGE
+        elif command -v yum >/dev/null 2>&1; then
+            yum_install $PACKAGE
+        elif command -v apt-get >/dev/null 2>&1; then
+            apt_install $PACKAGE
+        elif command -v pacman >/dev/null 2>&1; then
+            pacman_install $PACKAGE
+        elif command -v port >/dev/null 2>&1; then
+            port_install $PACKAGE
+        elif command -v choco >/dev/null 2>&1; then
+            choco_install $PACKAGE
+        elif command -v dnf >/dev/null 2>&1; then
+            dnf_install $PACKAGE
+        elif command -v emerge >/dev/null 2>&1; then
+            emerge_install $PACKAGE
+        elif command -v zypper >/dev/null 2>&1; then
+            zypper_install $PACKAGE
+        else
+            crit "Not found software installer."
+            FNRET=1
+        fi
+    fi
+
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE install failed."
+    else
+        ok "$PACKAGE installed."
+    fi
+    FNRET=$FNRET
+}
+
+upgrade_package()
+{
+    local PACKAGE=$1
+    if command -v brew >/dev/null 2>&1; then
+        brew_upgrade $PACKAGE
+    elif command -v yum >/dev/null 2>&1; then
+        yum_upgrade $PACKAGE
+    elif command -v apt-get >/dev/null 2>&1; then
+        apt_upgrade $PACKAGE
+    elif command -v pacman >/dev/null 2>&1; then
+        pacman_upgrade $PACKAGE
+    elif command -v port >/dev/null 2>&1; then
+        port_upgrade $PACKAGE
+    elif command -v choco >/dev/null 2>&1; then
+        choco_upgrade $PACKAGE
+    elif command -v dnf >/dev/null 2>&1; then
+        dnf_upgrade $PACKAGE
+    elif command -v emerge >/dev/null 2>&1; then
+        emerge_upgrade $PACKAGE
+    elif command -v zypper >/dev/null 2>&1; then
+        zypper_upgrade $PACKAGE
+    else
+        crit "Not found software installer."
+        FNRET=1
+    fi
+
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE upgrade failed."
+    else
+        ok "$PACKAGE upgraded."
+    fi
+    FNRET=$FNRET
+}
+
+remove_package()
+{
+    local PACKAGE=$1
+    if command -v brew >/dev/null 2>&1; then
+        brew_uninstall $PACKAGE
+    elif command -v yum >/dev/null 2>&1; then
+        yum_uninstall $PACKAGE
+    elif command -v apt-get >/dev/null 2>&1; then
+        apt_uninstall $PACKAGE
+    elif command -v pacman >/dev/null 2>&1; then
+        pacman_uninstall $PACKAGE
+    elif command -v port >/dev/null 2>&1; then
+        port_uninstall $PACKAGE
+    elif command -v choco >/dev/null 2>&1; then
+        choco_uninstall $PACKAGE
+    elif command -v dnf >/dev/null 2>&1; then
+        dnf_uninstall $PACKAGE
+    elif command -v emerge >/dev/null 2>&1; then
+        emerge_uninstall $PACKAGE
+    elif command -v zypper >/dev/null 2>&1; then
+        zypper_uninstall $PACKAGE
+    else
+        crit "Not found software installer."
+        FNRET=1
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE remove failed."
+    else
+        ok "$PACKAGE removed."
+    fi
+    FNRET=$FNRET
+}
+
+npm_install()
+{
+    local PACKAGE=$1
+    is_installed npm
+    if [ $FNRET = 1 ]; then
+        crit "First must be install nodejs npm."
+    else
+        debug "npm install -g --registry https://registry.npm.taobao.org $PACKAGE"
+        npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
+        if [ $? = 0 ]; then
+            FNRET=0
+        else
+            FNRET=1
+        fi
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE install failed."
+    else
+        ok "$PACKAGE installed."
+    fi
+}
+
+npm_uninstall()
+{
+    local PACKAGE=$1
+    is_installed npm
+    if [ $FNRET = 1 ]; then
+        crit "First must be install nodejs npm."
+    else
+        debug "npm uninstall $PACKAGE -y"
+        npm uninstall $PACKAGE -y
+        if [ $? = 0 ]; then
+            FNRET=0
+        else
+            FNRET=1
+        fi
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE uninstall failed."
+    else
+        ok "$PACKAGE uninstalled."
+    fi
+}
+
+npm_update()
+{
+    local PACKAGE=$1
+    is_installed npm
+    if [ $FNRET = 1 ]; then
+        crit "First must be install nodejs npm."
+    else
+        debug "npm update $PACKAGE"
+        npm update $PACKAGE
+        if [ $? = 0 ]; then
+            FNRET=0
+        else
+            FNRET=1
+        fi
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE upgrade failed."
+    else
+        ok "$PACKAGE upgraded."
+    fi
+}
+
+pip_install()
+{
+    local PACKAGE=$1
+    is_installed pip
+    if [ $FNRET = 1 ]; then
+        crit "First must be install pip tools."
+    else
+        debug "pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE"
+        pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE
+        if [ $? = 0 ]; then
+            FNRET=0
+        else
+            FNRET=1
+        fi
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE install failed."
+    else
+        ok "$PACKAGE installed."
+    fi
+}
+
+pip_uninstall()
+{
+    local PACKAGE=$1
+    is_installed pip
+    if [ $FNRET = 1 ]; then
+        crit "First must be install pip tools."
+    else
+        debug "pip uninstall $PACKAGE -y"
+        pip uninstall $PACKAGE -y
+        if [ $? = 0 ]; then
+            FNRET=0
+        else
+            FNRET=1
+        fi
+    fi
+    if [ $FNRET = 1 ]; then
+        crit "$PACKAGE uninstall failed."
+    else
+        ok "$PACKAGE uninstalled."
+    fi
+}
+
+is_pip_installed()
+{
+    local PACKAGE=$1
+    if pip3 show $PACKAGE >/dev/null 2>&1; then
+        FNRET=0
+    else
+        FNRET=1
     fi
 }

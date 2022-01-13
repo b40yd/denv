@@ -56,7 +56,6 @@ done
 case $forcedstatus in
     install )
         install
-        debug "....." $FNRET
         exit $FNRET
         ;;
     upgrade )

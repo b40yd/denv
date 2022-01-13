@@ -97,6 +97,15 @@ cecho () {
 
 crit () {
     if [ $MACHINE_LOG_LEVEL -ge 1 ]; then _logger $BRED "[ KO ] $*"; fi
+    SCRIPT_NUMBER=($(grep -Eo '^[0-9.]+' <<< $(echo $SCRIPT_NAME)))
+    if [ -f $INSTALL_FAILED_LOG ]; then
+        if [ "$(grep ${SCRIPT_NUMBER[0]}  $INSTALL_FAILED_LOG)" = "" ]; then
+            $(echo ${SCRIPT_NUMBER[0]} >> $INSTALL_FAILED_LOG)
+        fi
+    else
+        $(echo ${SCRIPT_NUMBER[0]} >> $INSTALL_FAILED_LOG)
+    fi
+
     # This variable incrementation is used to measure failure or success in tests
     CRITICAL_ERRORS_NUMBER=$((CRITICAL_ERRORS_NUMBER+1))
 }

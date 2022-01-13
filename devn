@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 #
 # Copyright (C) 2022, 7ym0n
 #
@@ -21,7 +21,9 @@ BASEPATH=$(cd `dirname $0`; pwd)
 LONG_SCRIPT_NAME=$(basename $0)
 SCRIPT_NAME=${LONG_SCRIPT_NAME%.sh}
 export DOTFAIRY_ROOT_DIR=${BASEPATH:-"."}
+export INSTALL_FAILED_LOG=$DOTFAIRY_ROOT_DIR/failed.log
 export LOGLEVEL=4
+SHOW_SCRIPT_LIST=0
 PASSED_SCRIPT=0
 FAILED_SCRIPT=0
 TOTAL_SCRIPT=0
@@ -59,7 +61,7 @@ if [ $# = 0 ]; then
     usage
 fi
 
-declare -a TEST_LIST ALLOWED_SERVICES_LIST
+declare -a TEST_LIST
 
 # Arguments parsing
 while [[ $# > 0 ]]; do
@@ -82,6 +84,9 @@ while [[ $# > 0 ]]; do
             LOGLEVEL=$2
             shift
             ;;
+        --list)
+            SHOW_SCRIPT_LIST=1
+            ;;
         --sudo)
             SUDO_MODE='--sudo'
             ;;
@@ -103,17 +108,22 @@ if [ $FNRET = 1 ]; then
     install_package bc
 fi
 
-for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*.sh); do
+SHOW_SCRIPTS=()
+for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*/*.sh); do
     if [ ${#TEST_LIST[@]} -gt 0 ] ; then
         # --only X has been specified at least once, is this script in my list ?
         SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(basename $SCRIPT)")
         SCRIPT_PREFIX_RE=$(sed -e 's/\./\\./g' <<< "$SCRIPT_PREFIX")
-        if ! grep -qEw "^$SCRIPT_PREFIX_RE" <<< "${TEST_LIST[@]}"; then
+        if ! grep -qEw "$SCRIPT_PREFIX_RE" <<< "${TEST_LIST[@]}"; then
             # not in the list
             continue
         fi
     fi
 
+    if [ $SHOW_SCRIPT_LIST = 1 ]; then
+        SHOW_SCRIPTS+=($(basename $SCRIPT))
+        continue
+    fi
     info "Treating $SCRIPT"
 
     if [ $INSTALL = 1 ]; then
@@ -153,6 +163,19 @@ for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*.sh); do
 done
 
 printf "%40s\n" "################### SUMMARY ###################"
+if [ $SHOW_SCRIPT_LIST = 1 ]; then
+    for SCRIPT in "${SHOW_SCRIPTS[@]}"; do
+        SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(echo $SCRIPT)")
+        printf "%5s %s %39s %s\n"        "$SCRIPT_PREFIX" " " "${SCRIPT//${SCRIPT_PREFIX}_/ }"
+    done
+    exit 0
+fi
+
+if [ -f $INSTALL_FAILED_LOG ]; then
+    FAILED_SCRIPTS=`cat $INSTALL_FAILED_LOG`
+    printf "%30s %s\n"        "Failed Scripts :" "[`echo ${FAILED_SCRIPTS}`]"
+    rm -rf $INSTALL_FAILED_LOG
+fi
 printf "%30s %s\n"        "Total Available :" "$TOTAL_SCRIPT"
 printf "%30s %s\n"        "Total Runned :" "$TOTAL_SCRIPT"
 printf "%30s [ %7s ]\n"   "Total Passed :" "$PASSED_SCRIPT/$TOTAL_SCRIPT"
