@@ -1,4 +1,4 @@
-# devn
+# denv
 development environment install by shell.
 # Introduce
 ## Support
@@ -13,6 +13,10 @@ For Linux:
 - dnf
 - emerge
 - zypper
+
+For Windows:
+- scoop
+- choco
 
 ## Tools
 - Emacs
@@ -32,35 +36,35 @@ For Linux:
 # Usage
 ## Download
 ```
-git clone https://github.com/7ym0n/devn.git &&cd devn
+git clone https://github.com/7ym0n/denv.git &&cd denv
 ```
 ## Install
 All software and environment dependent install. `--sudo` allows sudo
 escalation to access to root files.
 ```
-bash devn --install --sudo
+bash denv --install --sudo
 ```
 Specify the installation environment.
 ```
-bash devn --install --only 1.1.1 --sudo
+bash denv --install --only 1.1.1 --sudo
 ```
 
 ## Upgrade
 All software and environment dependent upgrade.
 ```
-bash devn --upgrade --sudo
+bash denv --upgrade --sudo
 ```
 Specify the upgrade environment.
 ```
-bash devn --upgrade --only 1.1.1 --sudo
+bash denv --upgrade --only 1.1.1 --sudo
 ```
 
 ## Remove
 All software and environment dependent remove.
 ```
-bash devn --remove --sudo
+bash denv --remove --sudo
 ```
 Specify the remove environment.
 ```
-bash devn --remove --only 1.1.1 --sudo
+bash denv --remove --only 1.1.1 --sudo
 ```
