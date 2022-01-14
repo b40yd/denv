@@ -166,7 +166,7 @@ is_installed()
 port_install()
 {
     local PACKAGE=$1
-    port install $PACKAGE
+    $SUDO_CMD port install $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -177,7 +177,7 @@ port_install()
 port_upgrade()
 {
     local PACKAGE=$1
-    port upgrade $PACKAGE
+    $SUDO_CMD port upgrade $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -188,7 +188,7 @@ port_upgrade()
 port_uninstall()
 {
     local PACKAGE=$1
-    port uninstall $PACKAGE
+    $SUDO_CMD port uninstall $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -199,7 +199,7 @@ port_uninstall()
 choco_install()
 {
     local PACKAGE=$1
-    choco install -y $PACKAGE
+    $SUDO_CMD choco install -y $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -211,7 +211,7 @@ choco_install()
 choco_upgrade()
 {
     local PACKAGE=$1
-    choco upgrade -y $PACKAGE
+    $SUDO_CMD choco upgrade -y $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -222,7 +222,7 @@ choco_upgrade()
 choco_uninstall()
 {
     local PACKAGE=$1
-    choco uninstall -y $PACKAGE
+    $SUDO_CMD choco uninstall -y $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -233,7 +233,7 @@ choco_uninstall()
 scoop_install()
 {
     local PACKAGE=$1
-    scoop install $PACKAGE
+    $SUDO_CMD scoop install $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -244,7 +244,7 @@ scoop_install()
 scoop_upgrade()
 {
     local PACKAGE=$1
-    scoop update $PACKAGE
+    $SUDO_CMD scoop update $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -255,7 +255,7 @@ scoop_upgrade()
 scoop_uninstall()
 {
     local PACKAGE=$1
-    scoop uninstall $PACKAGE
+    $SUDO_CMD scoop uninstall $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -266,7 +266,7 @@ scoop_uninstall()
 emerge_install()
 {
     local PACKAGE=$1
-    emerge $PACKAGE
+    $SUDO_CMD emerge $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -277,7 +277,7 @@ emerge_install()
 emerge_upgrade()
 {
     local PACKAGE=$1
-    emerge -puv $PACKAGE
+    $SUDO_CMD emerge -puv $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -287,7 +287,7 @@ emerge_upgrade()
 emerge_uninstall()
 {
     local PACKAGE=$1
-    emerge -C $PACKAGE
+    $SUDO_CMD emerge -C $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -298,7 +298,7 @@ emerge_uninstall()
 dnf_install()
 {
     local PACKAGE=$1
-    dnf -y install $PACKAGE
+    $SUDO_CMD dnf -y install $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -309,7 +309,7 @@ dnf_install()
 dnf_upgrade()
 {
     local PACKAGE=$1
-    dnf -y update $PACKAGE
+    $SUDO_CMD dnf -y update $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -320,7 +320,7 @@ dnf_upgrade()
 dnf_uninstall()
 {
     local PACKAGE=$1
-    dnf -y remove $PACKAGE
+    $SUDO_CMD dnf -y remove $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -331,7 +331,7 @@ dnf_uninstall()
 zypper_install()
 {
     local PACKAGE=$1
-    zypper --non-interactive install $PACKAGE
+    $SUDO_CMD zypper --non-interactive install $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -342,7 +342,7 @@ zypper_install()
 zypper_upgrade()
 {
     local PACKAGE=$1
-    zypper --non-interactive update $PACKAGE
+    $SUDO_CMD zypper --non-interactive update $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -353,7 +353,7 @@ zypper_upgrade()
 zypper_uninstall()
 {
     local PACKAGE=$1
-    zypper --non-interactive remove $PACKAGE
+    $SUDO_CMD zypper --non-interactive remove $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -472,8 +472,8 @@ npm_install()
     if [ $FNRET = 1 ]; then
         crit "First must be install nodejs npm."
     else
-        debug "npm install -g --registry https://registry.npm.taobao.org $PACKAGE"
-        npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
+        debug "$SUDO_CMD npm install -g --registry https://registry.npm.taobao.org $PACKAGE"
+        $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -494,8 +494,8 @@ npm_uninstall()
     if [ $FNRET = 1 ]; then
         crit "First must be install nodejs npm."
     else
-        debug "npm uninstall $PACKAGE -y"
-        npm uninstall $PACKAGE -y
+        debug "$SUDO_CMD npm uninstall $PACKAGE -y"
+        $SUDO_CMD npm uninstall $PACKAGE -y
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -516,8 +516,8 @@ npm_update()
     if [ $FNRET = 1 ]; then
         crit "First must be install nodejs npm."
     else
-        debug "npm update $PACKAGE"
-        npm update $PACKAGE
+        debug "$SUDO_CMD npm update $PACKAGE"
+        $SUDO_CMD npm update $PACKAGE
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -538,8 +538,8 @@ pip_install()
     if [ $FNRET = 1 ]; then
         crit "First must be install pip tools."
     else
-        debug "pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE"
-        pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE
+        debug "$SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE"
+        $SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -560,8 +560,8 @@ pip_uninstall()
     if [ $FNRET = 1 ]; then
         crit "First must be install pip tools."
     else
-        debug "pip uninstall $PACKAGE -y"
-        pip uninstall $PACKAGE -y
+        debug "$SUDO_CMD pip uninstall $PACKAGE -y"
+        $SUDO_CMD pip uninstall $PACKAGE -y
         if [ $? = 0 ]; then
             FNRET=0
         else

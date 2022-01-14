@@ -44,7 +44,7 @@ while [[ $# > 0 ]]; do
             forcedstatus=remove
             ;;
         --sudo)
-            SUDO_CMD="sudo -n"
+            SUDO_CMD="sudo"
             ;;
         *)
             debug "Unknown option passed"

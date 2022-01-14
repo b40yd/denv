@@ -25,11 +25,16 @@ setup-rustup-toolchain() {
     if [ $FNRET = 1 ]; then
         crit "First must be install rustup."
     else
-        rustup toolchain add nightly
-        rustup component add rust-src
+        $SUDO_CMD rustup toolchain add nightly
+        $SUDO_CMD rustup component add rust-src
+        if [ $? = 0 ]; then
+            crit "rust-src install failed."
+        else
+            ok "rust-src installed."
+        fi
         is_installed racer
         if [ $FNRET = 1 ]; then
-            cargo +nightly install racer
+            $SUDO_CMD cargo +nightly install racer
             if [ $? = 0 ]; then
                 crit "racer install failed."
             else
@@ -64,7 +69,7 @@ upgrade()
 {
     is_installed rustup
     if [ $FNRET = 0 ]; then
-        rustup update
+        $SUDO_CMD rustup update
     fi
     upgrade_package rust-analyzer
 }
@@ -73,7 +78,7 @@ remove()
 {
     is_installed rustup
     if [ $FNRET = 0 ]; then
-        rustup self uninstall
+        $SUDO_CMD rustup self uninstall
     fi
     remove_package rust-analyzer
 }

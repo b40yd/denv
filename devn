@@ -48,11 +48,7 @@ OPTIONS:
         The script number is the numbered prefix of the script,
         i.e. the script number of 1.2_script_name.sh is 1.2.
     --sudo
-        This option lets you audit your system as a normal user, but allows sudo
-        escalation to gain read-only access to root files. Note that you need to
-        provide a sudoers file with NOPASSWD option in /etc/sudoers.d/ because
-        the '-n' option instructs sudo not to prompt for a password.
-        Finally note that '--sudo' mode only works for audit mode.
+        allows sudoescalation to access to root files.
 EOF
     exit 0
 }
