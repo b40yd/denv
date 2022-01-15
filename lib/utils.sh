@@ -23,7 +23,7 @@ OS_PLATFORM=`uname -s`
 brew_install()
 {
     local PACKAGE=$1
-    brew install $PACKAGE
+    $SUDO_CMD brew install $PACKAGE
     if [ $? = 0 ]; then
         FNRET=0
     else
@@ -34,7 +34,7 @@ brew_install()
 brew_uninstall()
 {
     local PACKAGE=$1
-    brew uninstall $PACKAGE
+    $SUDO_CMD brew uninstall $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -45,7 +45,7 @@ brew_uninstall()
 brew_upgrade()
 {
     local PACKAGE=$1
-    brew upgrade $PACKAGE
+    $SUDO_CMD brew upgrade $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -57,7 +57,7 @@ brew_upgrade()
 apt_install()
 {
     local PACKAGE=$1
-    DEBIAN_FRONTEND='noninteractive' apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGE -y
+    $SUDO_CMD apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGE -y
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -68,7 +68,7 @@ apt_install()
 apt_uninstall()
 {
     local PACKAGE=$1
-    apt-get -y purge --autoremove $PKGNAME
+    $SUDO_CMD apt-get -y purge --autoremove $PKGNAME
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -79,7 +79,7 @@ apt_uninstall()
 apt_upgrade()
 {
     local PACKAGE=$1
-    apt-get -y upgrade $PKGNAME
+    $SUDO_CMD apt-get -y upgrade $PKGNAME
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -90,7 +90,7 @@ apt_upgrade()
 yum_install()
 {
     local PACKAGE=$1
-    yum install -y $PACKAGE
+    $SUDO_CMD yum install -y $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -100,7 +100,7 @@ yum_install()
 yum_uninstall()
 {
     local PACKAGE=$1
-    yum -y autoremove $PACKAGE
+    $SUDO_CMD yum -y autoremove $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -111,7 +111,7 @@ yum_uninstall()
 yum_upgrade()
 {
     local PACKAGE=$1
-    yum -y upgrade $PACKAGE
+    $SUDO_CMD yum -y upgrade $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -122,7 +122,7 @@ yum_upgrade()
 pacman_install()
 {
     local PACKAGE=$1
-    pacman --noconfirm -Syy $PACKAGE
+    $SUDO_CMD pacman --noconfirm -Syy $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -133,7 +133,7 @@ pacman_install()
 pacman_uninstal()
 {
     local PACKAGE=$1
-    pacman --noconfirm -R $PACKAGE
+    $SUDO_CMD pacman --noconfirm -R $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
@@ -144,7 +144,7 @@ pacman_uninstal()
 pacman_upgrade()
 {
     local PACKAGE=$1
-    pacman --noconfirm -Syu $PACKAGE
+    $SUDO_CMD pacman --noconfirm -Syu $PACKAGE
     if [ $? != 0 ]; then
         FNRET=1
     else
