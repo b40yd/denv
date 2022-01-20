@@ -18,20 +18,36 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+package_name()
+{
+    local PACKAGE="zenity"
 
+    if command -v brew >/dev/null 2>&1; then
+        PACKAGE="ncruces/tap/zenity"
+    fi
+
+    echo $PACKAGE
+}
+
+# see https://github.com/ncruces/zenity/releases
 install()
 {
-    install_package zenity
+    is_installed zenity
+    if [ $FNRET = 1 ]; then
+        install_package $(package_name)
+    else
+        ok "$(package_name) installed."
+    fi
 }
 
 upgrade()
 {
-    upgrade_package zenity
+    upgrade_package $(package_name)
 }
 
 remove()
 {
-    remove_package zenity
+    remove_package $(package_name)
 }
 
 if [ -z "$DOTFAIRY_ROOT_DIR" ]; then

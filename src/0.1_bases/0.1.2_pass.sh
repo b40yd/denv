@@ -21,7 +21,7 @@
 # see https://www.passwordstore.org/
 package_name()
 {
-    PACKAGE="pass"
+    local PACKAGE="pass"
 
     if command -v zypper >/dev/null 2>&1; then
         PACKAGE="password-store"

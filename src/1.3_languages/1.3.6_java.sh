@@ -30,6 +30,9 @@ install()
             ok "openjdk installed."
         fi
     fi
+    warn "maven package manager, you need manual download https://maven.apache.org/download.cgi"
+    warn "setting your shell environment variable. \nexport MAVEN_HOME=/usr/local/apache-maven-\${version}
+export PATH=\$PATH:/Users/admin/repos/go/bin:\${MAVEN_HOME}/bin"
 }
 
 upgrade()
