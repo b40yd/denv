@@ -63,6 +63,9 @@ install()
             fi
         done
     fi
+    if [ "$SYSTEM_TYPE" = "Linux" ]; then
+        $SUDO_CMD fc-cache -f -v
+    fi
 }
 
 upgrade()
