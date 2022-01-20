@@ -76,7 +76,7 @@ if [ -z "$DOTFAIRY_ROOT_DIR" ]; then
     exit 128
 fi
 
-# Main function, will call the proper functions given the configuration (audit, enabled, disabled)
+# Main function, will call the proper functions given the configuration (install, upgrade, remove)
 if [ -r $DOTFAIRY_ROOT_DIR/lib/main.sh ]; then
     . $DOTFAIRY_ROOT_DIR/lib/main.sh
 else
