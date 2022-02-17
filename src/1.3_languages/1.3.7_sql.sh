@@ -18,21 +18,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# see https://www.passwordstore.org/
+# see https://github.com/kostafey/ejc-sql
 package_name()
 {
-    local PACKAGE="pass"
+    local PACKAGE="leiningen"
 
-    if command -v zypper >/dev/null 2>&1; then
-        PACKAGE="password-store"
+    if command -v choco >/dev/null 2>&1; then
+        PACKAGE="lein"
     fi
-
     echo $PACKAGE
 }
 
 install()
 {
-    is_installed pass
+    is_installed $(package_name)
     if [ $FNRET = 1 ]; then
         install_package $(package_name)
     else

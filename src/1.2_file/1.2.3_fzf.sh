@@ -17,22 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-# see https://www.passwordstore.org/
 package_name()
 {
-    local PACKAGE="pass"
-
-    if command -v zypper >/dev/null 2>&1; then
-        PACKAGE="password-store"
-    fi
+    local PACKAGE="fzf"
 
     echo $PACKAGE
 }
 
 install()
 {
-    is_installed pass
+    is_installed $(package_name)
     if [ $FNRET = 1 ]; then
         install_package $(package_name)
     else
