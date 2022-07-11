@@ -66,7 +66,13 @@ install()
     if [ $FNRET = 1 ]; then
         pip_install yapf
     else
-        ok "python-language-server installed."
+        ok "yapf installed."
+    fi
+    is_pip_installed black
+    if [ $FNRET = 1 ]; then
+        pip_install black
+    else
+        ok "black installed."
     fi
 }
 
@@ -77,6 +83,7 @@ upgrade()
 
 remove()
 {
+    pip_uninstall black
     pip_uninstall yapf
     pip_uninstall python-language-server
     remove_package python3
