@@ -33,16 +33,16 @@ install()
 {
     local FONTS="/tmp/fonts"
     if [ ! -d $FONTS ]; then
-        git clone https://gitlab.com/7ym0n/fonts.git $FONTS
+        git clone https://gitlab.com/b40yd/fonts.git $FONTS
         if [ $? != 0 ]; then
-            crit "git clone https://gitlab.com/7ym0n/fonts failed."
+            crit "git clone https://gitlab.com/b40yd/fonts failed."
             return
         fi
     else
         pushd $FONTS
         git pull
         if [ $? != 0 ]; then
-            crit "git pull https://gitlab.com/7ym0n/fonts failed."
+            crit "git pull https://gitlab.com/b40yd/fonts failed."
             return
         fi
         popd
