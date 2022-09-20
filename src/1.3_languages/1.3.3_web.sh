@@ -37,6 +37,7 @@ install()
     npm_install bash-language-server
     npm_install typescript-language-server
     npm_install vscode-json-languageserver
+    npm_install trash-cli
     is_installed mmdc
     if [ $FNRET = 1 ]; then
         npm_install @mermaid-js/mermaid-cli
@@ -57,6 +58,7 @@ upgrade()
     npm_update @mermaid-js/mermaid-cli
     npm_update vscode-css-languageserver-bin
     npm_update vscode-html-languageserver-bin
+    npm_update trash-cli
 }
 
 remove()
@@ -68,6 +70,7 @@ remove()
     npm_uninstall vscode-json-languageserver
     npm_uninstall typescript-language-server
     npm_uninstall bash-language-server
+    npm_uninstall trash-cli
     remove_package nodejs
 }
 
