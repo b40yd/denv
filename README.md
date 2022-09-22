@@ -38,6 +38,14 @@ For Windows:
 ```
 git clone https://github.com/7ym0n/denv.git &&cd denv
 ```
+## Configure
+Set shell environment variable.
+``` shell
+alias cp="cp -i"
+alias rm="trash"
+alias cat="bat"
+```
+
 ## Install
 All software and environment dependent install. `--sudo` allows sudo
 escalation to access to root files.
