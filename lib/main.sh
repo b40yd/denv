@@ -54,15 +54,15 @@ while [[ $# > 0 ]]; do
 done
 
 case $forcedstatus in
-    install )
+    install)
         install
         exit $FNRET
         ;;
-    upgrade )
+    upgrade)
         upgrade
         exit $FNRET
         ;;
-    remove )
+    remove)
         remove
         exit $FNRET
         ;;
