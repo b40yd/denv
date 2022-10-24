@@ -23,6 +23,7 @@ SCRIPT_NAME=${LONG_SCRIPT_NAME%.sh}
 export DOTFAIRY_ROOT_DIR=${BASEPATH:-"."}
 export INSTALL_FAILED_LOG=$DOTFAIRY_ROOT_DIR/failed.log
 export LOGLEVEL=4
+export VERBOSE=0
 SHOW_SCRIPT_LIST=0
 PASSED_SCRIPT=0
 FAILED_SCRIPT=0
@@ -38,9 +39,12 @@ $LONG_SCRIPT_NAME <RUN_MODE> [OPTIONS], where RUN_MODE is one of:
     --help -h
         Show this help
 
-    --install install package.
-    --upgrade upgrade package.
-    --remove remove package.
+    --install install script action.
+    --upgrade upgrade script action.
+    --remove remove script action.
+    --list show scripts.
+    --loglevel script execute log level is (error, warning, info, ok, debug).
+    --verbose show script execute detail.
 OPTIONS:
     --only <script_number>
         Modifies the RUN_MODE to only work on the script_number script.
@@ -66,7 +70,7 @@ while [[ $# > 0 ]]; do
         --install)
             INSTALL=1
             ;;
-        --UPGRADE)
+        --upgrade)
             UPGRADE=1
             ;;
         --remove)
@@ -82,6 +86,9 @@ while [[ $# > 0 ]]; do
             ;;
         --list)
             SHOW_SCRIPT_LIST=1
+            ;;
+        --verbose)
+            VERBOSE=1
             ;;
         --sudo)
             SUDO_MODE='--sudo'

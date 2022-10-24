@@ -19,6 +19,7 @@
 #
 
 OS_PLATFORM=`uname -s`
+OUTPUT="/tmp/denv.log"
 
 brew_install()
 {
@@ -367,23 +368,68 @@ install_package()
     is_installed $PACKAGE
     if [ $FNRET = 1 ]; then
         if command -v brew >/dev/null 2>&1; then
-            brew_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                brew_install $PACKAGE
+            else
+                brew_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v yum >/dev/null 2>&1; then
-            yum_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                yum_install $PACKAGE
+            else
+                yum_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v apt-get >/dev/null 2>&1; then
-            apt_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                apt_install $PACKAGE
+            else
+                apt_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v pacman >/dev/null 2>&1; then
-            pacman_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                pacman_install $PACKAGE
+            else
+                pacman_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v port >/dev/null 2>&1; then
-            port_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                port_install $PACKAGE
+            else
+                port_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v choco >/dev/null 2>&1; then
-            choco_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                choco_install $PACKAGE
+            else
+                choco_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v dnf >/dev/null 2>&1; then
-            dnf_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                dnf_install $PACKAGE
+            else
+                dnf_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v emerge >/dev/null 2>&1; then
-            emerge_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                emerge_install $PACKAGE
+            else
+                emerge_install $PACKAGE > $OUTPUT 2>&1
+            fi
         elif command -v zypper >/dev/null 2>&1; then
-            zypper_install $PACKAGE
+            if [ $VERBOSE -eq 1 ]
+            then
+                zypper_install $PACKAGE
+            else
+                zypper_install $PACKAGE > $OUTPUT 2>&1
+            fi
         else
             crit "Not found software installer."
             FNRET=1
@@ -402,23 +448,68 @@ upgrade_package()
 {
     local PACKAGE=$1
     if command -v brew >/dev/null 2>&1; then
-        brew_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            brew_upgrade $PACKAGE
+        else
+            brew_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v yum >/dev/null 2>&1; then
-        yum_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            yum_upgrade $PACKAGE
+        else
+            yum_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v apt-get >/dev/null 2>&1; then
-        apt_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            apt_upgrade $PACKAGE
+        else
+            apt_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v pacman >/dev/null 2>&1; then
-        pacman_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            pacman_upgrade $PACKAGE
+        else
+            pacman_upgrade$PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v port >/dev/null 2>&1; then
-        port_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            port_upgrade $PACKAGE
+        else
+            port_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v choco >/dev/null 2>&1; then
-        choco_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            choco_upgrade $PACKAGE
+        else
+            choco_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v dnf >/dev/null 2>&1; then
-        dnf_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            dnf_upgrade $PACKAGE
+        else
+            dnf_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v emerge >/dev/null 2>&1; then
-        emerge_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            emerge_upgrade $PACKAGE
+        else
+            emerge_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v zypper >/dev/null 2>&1; then
-        zypper_upgrade $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            zypper_upgrade $PACKAGE
+        else
+            zypper_upgrade $PACKAGE > $OUTPUT 2>&1
+        fi
     else
         crit "Not found software installer."
         FNRET=1
@@ -436,23 +527,68 @@ remove_package()
 {
     local PACKAGE=$1
     if command -v brew >/dev/null 2>&1; then
-        brew_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            brew_uninstall $PACKAGE
+        else
+            brew_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v yum >/dev/null 2>&1; then
-        yum_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            yum_uninstall $PACKAGE
+        else
+            yum_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v apt-get >/dev/null 2>&1; then
-        apt_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            apt_uninstall $PACKAGE
+        else
+            apt_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v pacman >/dev/null 2>&1; then
-        pacman_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            pacman_uninstall $PACKAGE
+        else
+            pacman_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v port >/dev/null 2>&1; then
-        port_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            port_uninstall $PACKAGE
+        else
+            port_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v choco >/dev/null 2>&1; then
-        choco_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            choco_uninstall $PACKAGE
+        else
+            choco_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v dnf >/dev/null 2>&1; then
-        dnf_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            dnf_uninstall $PACKAGE
+        else
+            dnf_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v emerge >/dev/null 2>&1; then
-        emerge_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            emerge_uninstall $PACKAGE
+        else
+            emerge_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     elif command -v zypper >/dev/null 2>&1; then
-        zypper_uninstall $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            zypper_uninstall $PACKAGE
+        else
+            zypper_uninstall $PACKAGE > $OUTPUT 2>&1
+        fi
     else
         crit "Not found software installer."
         FNRET=1
@@ -473,7 +609,12 @@ npm_install()
         crit "First must be install nodejs npm."
     else
         debug "$SUDO_CMD npm install -g --registry https://registry.npm.taobao.org $PACKAGE"
-        $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
+        else
+            $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE > $OUTPUT 2>&1
+        fi
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -495,7 +636,12 @@ npm_uninstall()
         crit "First must be install nodejs npm."
     else
         debug "$SUDO_CMD npm uninstall $PACKAGE -y"
-        $SUDO_CMD npm uninstall $PACKAGE -y
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD npm uninstall $PACKAGE -y
+        else
+            $SUDO_CMD npm uninstall $PACKAGE -y > $OUTPUT 2>&1
+        fi
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -517,7 +663,12 @@ npm_update()
         crit "First must be install nodejs npm."
     else
         debug "$SUDO_CMD npm update $PACKAGE"
-        $SUDO_CMD npm update $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD npm update $PACKAGE
+        else
+            $SUDO_CMD npm update $PACKAGE > $OUTPUT 2>&1
+        fi
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -539,7 +690,12 @@ pip_install()
         crit "First must be install pip tools."
     else
         debug "$SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE"
-        $SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE
+        else
+            $SUDO_CMD pip install -i https://mirrors.aliyun.com/pypi/simple/ $PACKAGE > $OUTPUT 2>&1
+        fi
         if [ $? = 0 ]; then
             FNRET=0
         else
@@ -561,7 +717,12 @@ pip_uninstall()
         crit "First must be install pip tools."
     else
         debug "$SUDO_CMD pip uninstall $PACKAGE -y"
-        $SUDO_CMD pip uninstall $PACKAGE -y
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD pip uninstall $PACKAGE -y > $OUTPUT
+        else
+            $SUDO_CMD pip uninstall $PACKAGE -y > $OUTPUT 2>&1
+        fi
         if [ $? = 0 ]; then
             FNRET=0
         else
