@@ -18,8 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+export OUTPUT="/tmp/denv.log"
 OS_PLATFORM=`uname -s`
-OUTPUT="/tmp/denv.log"
 
 brew_install()
 {

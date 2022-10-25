@@ -25,27 +25,44 @@ setup-rustup-toolchain() {
     if [ $FNRET = 1 ]; then
         crit "First must be install rustup."
     else
-        $SUDO_CMD rustup toolchain add nightly
-        $SUDO_CMD rustup component add rust-src
-        if [ $? = 0 ]; then
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD rustup toolchain add nightly
+        else
+            $SUDO_CMD rustup toolchain add nightly > $OUTPUT 2>&1
+        fi
+
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD rustup component add rust-src
+        else
+            $SUDO_CMD rustup component add rust-src > $OUTPUT 2>&1
+        fi
+
+        if [ $? != 0 ]; then
             crit "rust-src install failed."
         else
             ok "rust-src installed."
-        fi
-        is_installed racer
-        if [ $FNRET = 1 ]; then
-            $SUDO_CMD cargo +nightly install racer
-            if [ $? = 0 ]; then
-                crit "racer install failed."
+            is_installed racer
+            if [ $FNRET = 1 ]; then
+                if [ $VERBOSE -eq 1 ]
+                then
+                    $SUDO_CMD cargo +nightly install racer
+                else
+                    $SUDO_CMD cargo +nightly install racer > $OUTPUT 2>&1
+                fi
+                if [ $? != 0 ]; then
+                    crit "racer install failed."
+                else
+                    ok "racer installed."
+                fi
             else
                 ok "racer installed."
+                is_installed rust-analyzer
+                if [ $FNRET = 1 ]; then
+                    install_package rust-analyzer
+                fi
             fi
-        else
-            ok "racer installed."
-        fi
-        is_installed rust-analyzer
-        if [ $FNRET = 1 ]; then
-            install_package rust-analyzer
         fi
     fi
 }
@@ -55,13 +72,12 @@ install()
     is_installed rustup
     if [ $FNRET = 1 ]; then
         curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-        if [ $? = 0 ]; then
+        if [ $? != 0 ]; then
             crit "rustup install failed."
         else
             ok "rustup installed."
         fi
     fi
-
     setup-rustup-toolchain
 }
 
@@ -69,7 +85,17 @@ upgrade()
 {
     is_installed rustup
     if [ $FNRET = 0 ]; then
-        $SUDO_CMD rustup update
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD rustup update
+        else
+            $SUDO_CMD rustup update > $OUTPUT 2>&1
+        fi
+        if [ $? = 0 ]; then
+            crit "rustup upgrade failed."
+        else
+            ok "rustup upgraded."
+        fi
     fi
     upgrade_package rust-analyzer
 }
@@ -78,7 +104,18 @@ remove()
 {
     is_installed rustup
     if [ $FNRET = 0 ]; then
-        $SUDO_CMD rustup self uninstall
+
+        if [ $VERBOSE -eq 1 ]
+        then
+            $SUDO_CMD rustup self uninstall
+        else
+            $SUDO_CMD rustup self uninstall >$OUTPUT 2>&1
+        fi
+        if [ $? = 0 ]; then
+            crit "rustup remove failed."
+        else
+            ok "rustup removed."
+        fi
     fi
     remove_package rust-analyzer
 }

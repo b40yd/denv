@@ -36,18 +36,31 @@ install_pip()
 {
     is_installed pip
     if [ $FNRET = 1 ]; then
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        is_installed python3
-        if [ $FNRET = 1 ]; then
-            crit "Frist must be install python3."
+        if [ $VERBOSE -eq 1 ]
+        then
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         else
-            python3 get-pip.py
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > $OUTPUT 2>&1
         fi
-    else
-        if [ $FNRET = 1 ]; then
-            crit "pip install failed."
+        if [ $? = 0 ]; then
+            crit "download get-pip.py failed."
         else
-            ok "pip installed."
+            is_installed python3
+            if [ $FNRET = 1 ]; then
+                crit "Frist must be install python3."
+            fi
+            if [ $VERBOSE -eq 1 ]
+            then
+                python3 get-pip.py
+            else
+                python3 get-pip.py > $OUTPUT 2>&1
+            fi
+
+            if [ $? != 0 ]; then
+                crit "pip install failed."
+            else
+                ok "pip installed."
+            fi
         fi
     fi
 }

@@ -41,7 +41,12 @@ go_install_tools()
     else
         is_installed $PACKAGE
         if [ $FNRET = 1 ]; then
-            go install $PACKAGE@latest
+            if [ $VERBOSE -eq 1 ]
+            then
+                go install $PACKAGE@latest
+            else
+                go install $PACKAGE@latest > $OUTPUT 2>&1
+            fi
             if [ $? = 0 ]; then
                 FNRET=0
             else
