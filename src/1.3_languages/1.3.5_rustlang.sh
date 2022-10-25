@@ -34,13 +34,14 @@ setup-rustup-toolchain() {
 
         if [ $VERBOSE -eq 1 ]
         then
-            $SUDO_CMD rustup component add rust-src
+            $SUDO_CMD rustup component add rust-src rustc-dev llvm-tools-preview
         else
-            $SUDO_CMD rustup component add rust-src > $OUTPUT 2>&1
+            $SUDO_CMD rustup component add rust-src rustc-dev llvm-tools-preview > $OUTPUT 2>&1
         fi
 
         if [ $? != 0 ]; then
             crit "rust-src install failed."
+            FNRET=1
         else
             ok "rust-src installed."
             is_installed racer
@@ -53,14 +54,13 @@ setup-rustup-toolchain() {
                 fi
                 if [ $? != 0 ]; then
                     crit "racer install failed."
+                    FNRET=1
                 else
                     ok "racer installed."
-                fi
-            else
-                ok "racer installed."
-                is_installed rust-analyzer
-                if [ $FNRET = 1 ]; then
-                    install_package rust-analyzer
+                    is_installed rust-analyzer
+                    if [ $FNRET = 1 ]; then
+                        install_package rust-analyzer
+                    fi
                 fi
             fi
         fi
@@ -76,9 +76,9 @@ install()
             crit "rustup install failed."
         else
             ok "rustup installed."
+            setup-rustup-toolchain
         fi
     fi
-    setup-rustup-toolchain
 }
 
 upgrade()
@@ -93,11 +93,15 @@ upgrade()
         fi
         if [ $? = 0 ]; then
             crit "rustup upgrade failed."
+            FNRET=1
         else
             ok "rustup upgraded."
+            upgrade_package rust-analyzer
         fi
+    else
+        crit "rustup not installed."
+        FNRET=1
     fi
-    upgrade_package rust-analyzer
 }
 
 remove()
@@ -113,11 +117,12 @@ remove()
         fi
         if [ $? = 0 ]; then
             crit "rustup remove failed."
+            FNRET=1
         else
             ok "rustup removed."
+            remove_package rust-analyzer
         fi
     fi
-    remove_package rust-analyzer
 }
 
 if [ -z "$DOTFAIRY_ROOT_DIR" ]; then

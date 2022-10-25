@@ -56,21 +56,20 @@ done
 case $forcedstatus in
     install)
         install
-        exit $FNRET
         ;;
     upgrade)
         upgrade
-        exit $FNRET
         ;;
     remove)
         remove
-        exit $FNRET
         ;;
     nonexistent)
         no_entity "Check ${SCRIPT_NAME} is nonexistent "
-        exit 3
+        FNRET=3
         ;;
     *)
         warn "Wrong value for status : $status. Must be [ install | upgrade | remove ]"
         ;;
 esac
+info "$SCRIPT_NAME finished"
+exit $FNRET
