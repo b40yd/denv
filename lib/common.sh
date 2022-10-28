@@ -140,10 +140,10 @@ debug () {
 # center 10 "test" "="
 #     ===test===
 center(){
-    length=$1
-    format_str=$2
-    format_template="%-${#format_str}s"
-    symbol_len=0
+    local length=$1
+    local format_str=$2
+    local format_template="%-${#format_str}s"
+    local symbol_len=0
     if [ "${#3}" != "0" ]; then
         OUTPUT_SYMBOL="$3"
     fi
