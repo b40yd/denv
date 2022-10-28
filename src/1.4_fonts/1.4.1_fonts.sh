@@ -33,22 +33,31 @@ install()
 {
     local FONTS="/tmp/fonts"
     if [ ! -d $FONTS ]; then
-        git clone https://gitlab.com/b40yd/fonts.git $FONTS
+        if [ $VERBOSE -eq 1 ]; then
+            git clone https://gitlab.com/b40yd/fonts.git $FONTS
+        else
+            git clone https://gitlab.com/b40yd/fonts.git $FONTS > $LOG_OUTPUT 2>&1
+        fi
+
         if [ $? != 0 ]; then
             crit "git clone https://gitlab.com/b40yd/fonts failed."
             FNRET=$?
         fi
     else
-        pushd $FONTS
-        git pull
+        pushd $FONTS > $LOG_OUTPUT 2>&1
+        if [ $VERBOSE -eq 1 ]; then
+            git pull
+        else
+            git pull > $LOG_OUTPUT 2>&1
+        fi
         if [ $? != 0 ]; then
             crit "git pull https://gitlab.com/b40yd/fonts failed."
             FNRET=$?
         fi
-        popd
+        popd > $LOG_OUTPUT 2>&1
     fi
 
-    if [ $FNRET != 0 ]; then
+    if [ "$FNRET" != 0 ]; then
         return $FNRET
     fi
 
