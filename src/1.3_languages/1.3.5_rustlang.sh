@@ -76,9 +76,9 @@ install()
             crit "rustup install failed."
         else
             ok "rustup installed."
-            setup-rustup-toolchain
         fi
     fi
+    setup-rustup-toolchain
 }
 
 upgrade()
