@@ -144,6 +144,7 @@ center(){
     local format_str=$2
     local format_template="%-${#format_str}s"
     local symbol_len=0
+    local mod=$((${#format_str}%2))
     if [ "${#3}" != "0" ]; then
         OUTPUT_SYMBOL="$3"
     fi
@@ -153,6 +154,9 @@ center(){
             printf "%-1s" "${OUTPUT_SYMBOL}"
         done
         printf "${format_template}" "${format_str}"
+        if [ $mod != 0 ]; then
+            symbol_len=$((${symbol_len}+1))
+        fi
         for i in `seq 1 ${symbol_len}`; do
             printf "%-1s" "${OUTPUT_SYMBOL}"
         done
