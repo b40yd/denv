@@ -41,7 +41,7 @@ install()
 
         if [ $? != 0 ]; then
             crit "git clone https://gitlab.com/b40yd/fonts failed."
-            FNRET=$?
+            FNRET=1
         fi
     else
         pushd $FONTS > $LOG_OUTPUT 2>&1
@@ -52,13 +52,13 @@ install()
         fi
         if [ $? != 0 ]; then
             crit "git pull https://gitlab.com/b40yd/fonts failed."
-            FNRET=$?
+            FNRET=1
         fi
         popd > $LOG_OUTPUT 2>&1
     fi
 
-    if [ "$FNRET" != 0 ]; then
-        return $FNRET
+    if [ "$FNRET" != "0" ]; then
+        return
     fi
 
     # find $FONTS -type f -name "*tf" -o -name "*ttc" | xargs -I {} cp -rfv {} .

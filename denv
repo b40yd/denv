@@ -180,7 +180,7 @@ fi
 
 if [ -f $INSTALL_FAILED_LOG ]; then
     FAILED_SCRIPTS=`cat $INSTALL_FAILED_LOG`
-    center $OUTPUT_LEN " Failed Scripts : [`echo ${FAILED_SCRIPTS}`] "
+    center $OUTPUT_LEN " Failed Scripts : [`echo ${FAILED_SCRIPTS}`] " " "
     rm -rf $INSTALL_FAILED_LOG
 fi
 center $OUTPUT_LEN " Total Available : $TOTAL_SCRIPT " " "
