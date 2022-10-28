@@ -40,7 +40,7 @@ install_pip()
         then
             curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         else
-            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > $OUTPUT 2>&1
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > $LOG_OUTPUT 2>&1
         fi
         if [ $? = 0 ]; then
             crit "download get-pip.py failed."
@@ -53,7 +53,7 @@ install_pip()
             then
                 python3 get-pip.py
             else
-                python3 get-pip.py > $OUTPUT 2>&1
+                python3 get-pip.py > $LOG_OUTPUT 2>&1
             fi
 
             if [ $? != 0 ]; then

@@ -20,6 +20,8 @@
 
 # Script and shell commands homogeneity
 export LANG=C
+declare -x OUTPUT_SYMBOL=${OUTPUT_SYMBOL:-"#"}
+declare -x OUTPUT_LEN=${OUTPUT_LEN:-"70"}
 
 #### Useful Color constants settings for loglevels
 
@@ -130,4 +132,32 @@ info () {
 
 debug () {
     if [ $MACHINE_LOG_LEVEL -ge 5 ]; then _logger $GRAY "[DBG ] $*"; fi
+}
+
+# output string
+# like python "test".center(10,'=')
+#     ===test===
+# center 10 "test" "="
+#     ===test===
+center(){
+    length=$1
+    format_str=$2
+    format_template="%-${#format_str}s"
+    symbol_len=0
+    if [ "${#3}" != "0" ]; then
+        OUTPUT_SYMBOL="$3"
+    fi
+    if [ "${#format_str}" -le "${length}" ]; then
+        symbol_len=$((($length-${#format_str})/2))
+        for i in `seq 1 ${symbol_len}`; do
+            printf "%-1s" "${OUTPUT_SYMBOL}"
+        done
+        printf "${format_template}" "${format_str}"
+        for i in `seq 1 ${symbol_len}`; do
+            printf "%-1s" "${OUTPUT_SYMBOL}"
+        done
+        printf "\n"
+    else
+        printf "${format_template}\n" "${format_str}"
+    fi
 }

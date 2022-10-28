@@ -20,10 +20,10 @@
 BASEPATH=$(cd `dirname $0`; pwd)
 LONG_SCRIPT_NAME=$(basename $0)
 SCRIPT_NAME=${LONG_SCRIPT_NAME%.sh}
-export DOTFAIRY_ROOT_DIR=${BASEPATH:-"."}
-export INSTALL_FAILED_LOG=$DOTFAIRY_ROOT_DIR/failed.log
-export LOGLEVEL=4
-export VERBOSE=0
+declare -x DOTFAIRY_ROOT_DIR=${BASEPATH:-"."}
+declare -x INSTALL_FAILED_LOG=$DOTFAIRY_ROOT_DIR/failed.log
+declare -x LOGLEVEL=4
+declare -x VERBOSE=0
 SHOW_SCRIPT_LIST=0
 PASSED_SCRIPT=0
 FAILED_SCRIPT=0
@@ -127,7 +127,8 @@ for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*/*.sh); do
         SHOW_SCRIPTS+=($(basename $SCRIPT))
         continue
     fi
-    info "Treating $SCRIPT"
+
+    center $OUTPUT_LEN " Treating $(basename $SCRIPT) "
 
     if [ $INSTALL = 1 ]; then
         debug "$DOTFAIRY_ROOT_DIR/src/$SCRIPT --install $SUDO_MODE"
@@ -165,29 +166,32 @@ for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*/*.sh); do
 
 done
 
-printf "%40s\n" "################### SUMMARY ###################"
+
+center $OUTPUT_LEN " SUMMARY "
 if [ $SHOW_SCRIPT_LIST = 1 ]; then
     for SCRIPT in "${SHOW_SCRIPTS[@]}"; do
         SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(echo $SCRIPT)")
-        printf "%5s %s %39s %s\n"        "$SCRIPT_PREFIX" " " "${SCRIPT//${SCRIPT_PREFIX}_/ }"
+        script_name=${SCRIPT//${SCRIPT_PREFIX}_/ }
+        output_template="%-${#SCRIPT_PREFIX}s  %-$((${OUTPUT_LEN}-${#SCRIPT_PREFIX}-${#script_name}-4))s %s\n"
+        printf "${output_template}" "$SCRIPT_PREFIX" " " "${script_name}"
     done
     exit 0
 fi
 
 if [ -f $INSTALL_FAILED_LOG ]; then
     FAILED_SCRIPTS=`cat $INSTALL_FAILED_LOG`
-    printf "%30s %s\n"        "Failed Scripts :" "[`echo ${FAILED_SCRIPTS}`]"
+    center $OUTPUT_LEN " Failed Scripts : [`echo ${FAILED_SCRIPTS}`] "
     rm -rf $INSTALL_FAILED_LOG
 fi
-printf "%30s %s\n"        "Total Available :" "$TOTAL_SCRIPT"
-printf "%30s %s\n"        "Total Runned :" "$TOTAL_SCRIPT"
-printf "%30s [ %7s ]\n"   "Total Passed :" "$PASSED_SCRIPT/$TOTAL_SCRIPT"
-printf "%30s [ %7s ]\n"   "Total Failed :" "$FAILED_SCRIPT/$TOTAL_SCRIPT"
-printf "%30s %.2f %%\n"   "Failed Percentage :" "$( echo "($FAILED_SCRIPT/$TOTAL_SCRIPT) * 100" | bc -l)"
+center $OUTPUT_LEN " Total Available : $TOTAL_SCRIPT " " "
+center $OUTPUT_LEN " Total Runned : $TOTAL_SCRIPT " " "
+center $OUTPUT_LEN " Total Passed : $PASSED_SCRIPT/$TOTAL_SCRIPT " " "
+center $OUTPUT_LEN " Total Failed : $FAILED_SCRIPT/$TOTAL_SCRIPT " " "
+center $OUTPUT_LEN " Failed Percentage : $( echo "scale=2;($FAILED_SCRIPT/$TOTAL_SCRIPT) * 100" | bc -l) " " "
 if [ $TOTAL_SCRIPT != 0 ]; then
-    printf "%30s %.2f %%\n"   "Conformity Percentage :" "$( echo "($PASSED_SCRIPT/($TOTAL_SCRIPT)) * 100" | bc -l)"
+    center $OUTPUT_LEN " Conformity Percentage : $( echo "scale=2;($PASSED_SCRIPT/($TOTAL_SCRIPT)) * 100" | bc -l)" " "
 else
-    printf "%30s %s %%\n"   "Conformity Percentage :" "N.A"
+    center $OUTPUT_LEN " Conformity Percentage : N.A " " "
 fi
 
 exit 0

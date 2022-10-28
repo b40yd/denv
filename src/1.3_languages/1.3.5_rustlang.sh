@@ -29,14 +29,14 @@ setup-rustup-toolchain() {
         then
             $SUDO_CMD rustup toolchain add nightly
         else
-            $SUDO_CMD rustup toolchain add nightly > $OUTPUT 2>&1
+            $SUDO_CMD rustup toolchain add nightly > $LOG_OUTPUT 2>&1
         fi
 
         if [ $VERBOSE -eq 1 ]
         then
             $SUDO_CMD rustup component add rust-src rustc-dev llvm-tools-preview
         else
-            $SUDO_CMD rustup component add rust-src rustc-dev llvm-tools-preview > $OUTPUT 2>&1
+            $SUDO_CMD rustup component add rust-src rustc-dev llvm-tools-preview > $LOG_OUTPUT 2>&1
         fi
 
         if [ $? != 0 ]; then
@@ -50,7 +50,7 @@ setup-rustup-toolchain() {
                 then
                     $SUDO_CMD cargo +nightly install racer
                 else
-                    $SUDO_CMD cargo +nightly install racer > $OUTPUT 2>&1
+                    $SUDO_CMD cargo +nightly install racer > $LOG_OUTPUT 2>&1
                 fi
                 if [ $? != 0 ]; then
                     crit "racer install failed."
@@ -89,7 +89,7 @@ upgrade()
         then
             $SUDO_CMD rustup update
         else
-            $SUDO_CMD rustup update > $OUTPUT 2>&1
+            $SUDO_CMD rustup update > $LOG_OUTPUT 2>&1
         fi
         if [ $? = 0 ]; then
             crit "rustup upgrade failed."
@@ -113,7 +113,7 @@ remove()
         then
             $SUDO_CMD rustup self uninstall
         else
-            $SUDO_CMD rustup self uninstall >$OUTPUT 2>&1
+            $SUDO_CMD rustup self uninstall >$LOG_OUTPUT 2>&1
         fi
         if [ $? = 0 ]; then
             crit "rustup remove failed."

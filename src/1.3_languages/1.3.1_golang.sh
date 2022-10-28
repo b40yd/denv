@@ -45,7 +45,7 @@ go_install_tools()
             then
                 go install $PACKAGE@latest
             else
-                go install $PACKAGE@latest > $OUTPUT 2>&1
+                go install $PACKAGE@latest > $LOG_OUTPUT 2>&1
             fi
             if [ $? = 0 ]; then
                 FNRET=0
