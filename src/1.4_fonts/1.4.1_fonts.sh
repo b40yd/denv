@@ -36,17 +36,22 @@ install()
         git clone https://gitlab.com/b40yd/fonts.git $FONTS
         if [ $? != 0 ]; then
             crit "git clone https://gitlab.com/b40yd/fonts failed."
-            return
+            FNRET=$?
         fi
     else
         pushd $FONTS
         git pull
         if [ $? != 0 ]; then
             crit "git pull https://gitlab.com/b40yd/fonts failed."
-            return
+            FNRET=$?
         fi
         popd
     fi
+
+    if [ $FNRET != 0 ]; then
+        return $FNRET
+    fi
+
     # find $FONTS -type f -name "*tf" -o -name "*ttc" | xargs -I {} cp -rfv {} .
     files=$(find $FONTS -type f -name "*tf" -o -name "*ttc")
     if [ $? = 0 ]; then
