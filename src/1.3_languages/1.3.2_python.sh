@@ -67,15 +67,18 @@ install_pip()
 
 install()
 {
-    install_package pyenv
     is_installed pyenv
-    if [ $FNRET = 0 ]; then
-        cat >> $HOME/.zshrc <<EOF
+    if [ $FNRET = 1 ]; then
+        install_package pyenv
+        local env_variable=`grep ".pyenv" $HOME/.zshrc`
+        if [ "$env_variable" = "" ]; then
+            cat >> $HOME/.zshrc <<EOF
 export PYENV_ROOT="\$HOME/.pyenv"
 export PATH="\$PYENV_ROOT/bin:\$PATH"
 eval "\$(pyenv init --path)"
 eval "\$(pyenv init -)"
 EOF
+        fi
     fi
     install_python
     install_pip
