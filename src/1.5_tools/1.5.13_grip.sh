@@ -22,14 +22,14 @@
 package_name()
 {
     # lsd command line.
-    local PACKAGE="graphviz"
+    local PACKAGE="grip"
 
     echo $PACKAGE
 }
 
 install()
 {
-    is_installed dot
+    is_installed $(package_name)
     if [ $FNRET = 1 ]; then
         install_package $(package_name)
     else
