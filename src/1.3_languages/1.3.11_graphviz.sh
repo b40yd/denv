@@ -29,7 +29,7 @@ package_name()
 
 install()
 {
-    is_installed $(package_name)
+    is_installed dot
     if [ $FNRET = 1 ]; then
         install_package $(package_name)
     else
