@@ -49,4 +49,4 @@ remove()
     remove_package clang
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

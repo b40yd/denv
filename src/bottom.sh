@@ -4,4 +4,4 @@ package_name(){
     echo "bottom"
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

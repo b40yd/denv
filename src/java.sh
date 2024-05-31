@@ -17,4 +17,4 @@ install()
 export PATH=\$PATH:/Users/admin/repos/go/bin:\${MAVEN_HOME}/bin"
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

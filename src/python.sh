@@ -70,4 +70,4 @@ EOF
     install_pip
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

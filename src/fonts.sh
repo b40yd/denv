@@ -74,4 +74,4 @@ remove()
     warn "You need manual remove fonts."
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

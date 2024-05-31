@@ -4,4 +4,4 @@ package_name(){
     echo "fd"
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

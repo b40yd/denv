@@ -11,4 +11,4 @@ package_name()
     echo $PACKAGE
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

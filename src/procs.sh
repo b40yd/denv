@@ -4,4 +4,4 @@ package_name(){
     echo "procs"
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

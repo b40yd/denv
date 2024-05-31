@@ -59,4 +59,4 @@ remove()
     remove_package luarocks
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

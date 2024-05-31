@@ -37,4 +37,4 @@ remove()
     remove_package $(package_name)
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh

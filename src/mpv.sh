@@ -4,4 +4,4 @@ package_name(){
     echo "mpv"
 }
 
-. $(dirname "$0")/main.sh
+. $(dirname "$0")/.main.sh
