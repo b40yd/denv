@@ -54,7 +54,7 @@ bash denv --install --sudo
 ```
 Specify the installation environment.
 ```
-bash denv --install --only 1.1.1 --sudo
+bash denv --install --only emacs --sudo
 ```
 
 ## Upgrade
@@ -64,7 +64,7 @@ bash denv --upgrade --sudo
 ```
 Specify the upgrade environment.
 ```
-bash denv --upgrade --only 1.1.1 --sudo
+bash denv --upgrade --only emacs --sudo
 ```
 
 ## Remove
@@ -74,5 +74,5 @@ bash denv --remove --sudo
 ```
 Specify the remove environment.
 ```
-bash denv --remove --only 1.1.1 --sudo
+bash denv --remove --only emacs --sudo
 ```
