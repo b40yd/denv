@@ -71,5 +71,5 @@ case $forcedstatus in
         warn "Wrong value for status : $status. Must be [ install | upgrade | remove ]"
         ;;
 esac
-info "$SCRIPT_NAME finished"
+debug "$SCRIPT_NAME finished"
 exit $FNRET

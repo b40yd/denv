@@ -86,7 +86,7 @@ _logger() {
     COLOR=$1
     shift
     test -z "$SCRIPT_NAME" && SCRIPT_NAME=$(basename $0)
-    builtin echo "$*" | /usr/bin/logger -t "[CIS_Hardening] $SCRIPT_NAME" -p "user.info"
+    builtin echo "$*" | /usr/bin/logger -t "[DENV] $SCRIPT_NAME" -p "user.info"
     SCRIPT_NAME_FIXEDLEN=$(printf "%-25.25s" "$SCRIPT_NAME")
     cecho $COLOR "$SCRIPT_NAME_FIXEDLEN $*"
 }
@@ -94,12 +94,12 @@ _logger() {
 cecho () {
     COLOR=$1
     shift
-    builtin echo -e "${COLOR}$*${NC}"
+    builtin echo "${COLOR}$*${NC}"
 }
 
 crit () {
     if [ $MACHINE_LOG_LEVEL -ge 1 ]; then _logger $BRED "[ KO ] $*"; fi
-    SCRIPT_NUMBER=($(grep -Eo '^[0-9.]+' <<< $(echo $SCRIPT_NAME)))
+    SCRIPT_NUMBER=($SCRIPT_NAME)
     if [ -f $INSTALL_FAILED_LOG ]; then
         if [ "$(grep ${SCRIPT_NUMBER[0]}  $INSTALL_FAILED_LOG)" = "" ]; then
             $(echo ${SCRIPT_NUMBER[0]} >> $INSTALL_FAILED_LOG)

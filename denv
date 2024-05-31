@@ -112,11 +112,11 @@ if [ $FNRET = 1 ]; then
 fi
 
 SHOW_SCRIPTS=()
-for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*/*.sh); do
+for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*.sh); do
+    SCRIPT_PREFIX=$(basename $SCRIPT)
+    SCRIPT_PREFIX_RE="${SCRIPT_PREFIX%.*}"
     if [ ${#TEST_LIST[@]} -gt 0 ] ; then
         # --only X has been specified at least once, is this script in my list ?
-        SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(basename $SCRIPT)")
-        SCRIPT_PREFIX_RE=$(sed -e 's/\./\\./g' <<< "$SCRIPT_PREFIX")
         if ! grep -qEw "$SCRIPT_PREFIX_RE" <<< "${TEST_LIST[@]}"; then
             # not in the list
             continue
@@ -124,11 +124,11 @@ for SCRIPT in $(ls -v $DOTFAIRY_ROOT_DIR/src/*/*.sh); do
     fi
 
     if [ $SHOW_SCRIPT_LIST = 1 ]; then
-        SHOW_SCRIPTS+=($(basename $SCRIPT))
+        SHOW_SCRIPTS+=($SCRIPT_PREFIX_RE)
         continue
     fi
 
-    center $OUTPUT_LEN " Treating $(basename $SCRIPT) "
+    center $OUTPUT_LEN " Treating $SCRIPT_PREFIX "
 
     if [ $INSTALL = 1 ]; then
         debug "$DOTFAIRY_ROOT_DIR/src/$SCRIPT --install $SUDO_MODE"
@@ -169,11 +169,10 @@ done
 
 center $OUTPUT_LEN " SUMMARY "
 if [ $SHOW_SCRIPT_LIST = 1 ]; then
+    index=0
     for SCRIPT in "${SHOW_SCRIPTS[@]}"; do
-        SCRIPT_PREFIX=$(grep -Eo '^[0-9.]+' <<< "$(echo $SCRIPT)")
-        script_name=${SCRIPT//${SCRIPT_PREFIX}_/ }
-        output_template="%-${#SCRIPT_PREFIX}s  %-$((${OUTPUT_LEN}-${#SCRIPT_PREFIX}-${#script_name}-4))s %s\n"
-        printf "${output_template}" "$SCRIPT_PREFIX" " " "${script_name}"
+        output_template="%-${#index}s  %-$((${OUTPUT_LEN}-${#index}-${#SCRIPT}-3))s %-${#SCRIPT}s\n"
+        printf "${output_template}" "$index" " " "${SCRIPT}"
     done
     exit 0
 fi

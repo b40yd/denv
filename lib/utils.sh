@@ -745,3 +745,32 @@ is_pip_installed()
         FNRET=1
     fi
 }
+
+if ! declare -f install > /dev/null; then
+    install()
+    {
+        local name=$(package_name)
+        if [ ! -z "$name" ];then
+            is_installed $PACKAGE
+            if [ $FNRET = 1 ]; then
+                install_package $name
+            else
+                ok "$name installed."
+            fi
+        fi
+    }
+fi
+
+if ! declare -f upgrade > /dev/null; then
+    upgrade()
+    {
+        upgrade_package $(package_name)
+    }
+fi
+
+if ! declare -f remove > /dev/null; then
+    remove()
+    {
+        remove_package $(package_name)
+    }
+fi
