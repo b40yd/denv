@@ -605,15 +605,16 @@ npm_install()
 {
     local PACKAGE=$1
     is_installed npm
+    registry="https://registry.npmmirror.com"
     if [ $FNRET = 1 ]; then
         crit "First must be install nodejs npm."
     else
-        debug "$SUDO_CMD npm install -g --registry https://registry.npm.taobao.org $PACKAGE"
+        debug "$SUDO_CMD npm install -g --registry $registry $PACKAGE"
         if [ $VERBOSE -eq 1 ]
         then
-            $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE
+            $SUDO_CMD npm install -g --registry=$registry $PACKAGE
         else
-            $SUDO_CMD npm install -g --registry=https://registry.npm.taobao.org $PACKAGE > $LOG_OUTPUT 2>&1
+            $SUDO_CMD npm install -g --registry=$registry $PACKAGE > $LOG_OUTPUT 2>&1
         fi
         if [ $? = 0 ]; then
             FNRET=0
