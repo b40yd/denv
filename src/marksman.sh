@@ -7,10 +7,12 @@ package_name(){
 # see https://github.com/artempyanykh/marksman
 install()
 {
-    is_installed rg
+    is_installed $(package_name)
     if [ $FNRET = 1 ]; then
         install_package $(package_name)
     else
         ok "$(package_name) installed."
     fi
 }
+
+. $(dirname "$0")/.main.sh

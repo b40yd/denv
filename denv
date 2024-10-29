@@ -171,8 +171,11 @@ center $OUTPUT_LEN " SUMMARY "
 if [ $SHOW_SCRIPT_LIST = 1 ]; then
     index=0
     for SCRIPT in "${SHOW_SCRIPTS[@]}"; do
-        output_template="%-${#index}s  %-$((${OUTPUT_LEN}-${#index}-${#SCRIPT}-3))s %-${#SCRIPT}s\n"
-        printf "${output_template}" "$index" " " "${SCRIPT}"
+        length=$((${OUTPUT_LEN}-${#index}-${#SCRIPT}-3))
+        chars=$(printf "%${length}s" | tr ' ' ".")
+        output_template="%-${#index}s  %-${length}s %-${#SCRIPT}s\n"
+        printf "${output_template}" "$index" "${chars}" "${SCRIPT}"
+        index=$((index + 1))
     done
     exit 0
 fi
